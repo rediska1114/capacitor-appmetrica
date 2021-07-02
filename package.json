@@ -1,0 +1,66 @@
+{
+  "name": "capacitor-appmetrica",
+  "version": "0.1.0",
+  "description": "Capacitor plugin for Appmetrica",
+  "main": "plugin.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "scripts": {
+    "lint": "npm run prettier -- --check && npm run swiftlint -- lint",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "swiftlint": "node-swiftlint",
+    "build": "npm run clean && tsc && rollup -c rollup.config.js",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "rediska1114 <rediska1114@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/android": "^2.4.7",
+    "@capacitor/core": "^2.4.7",
+    "@capacitor/ios": "^2.4.7",
+    "@ionic/prettier-config": "^1.0.0",
+    "@ionic/swiftlint-config": "^1.0.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "prettier": "^2.0.5",
+    "prettier-plugin-java": "^0.8.0",
+    "rimraf": "^3.0.0",
+    "rollup": "^2.21.0",
+    "swiftlint": "^1.0.1",
+    "typescript": "~4.1.2",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-generate-package-json": "^3.2.0"
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=2.4.0",
+    "tslib": "^2.0.0"
+  },
+  "files": [
+    "ios/",
+    "esm/",
+    "plugin.js",
+    "plugin.js.map",
+    "android/",
+    "CapacitorAppmetrica.podspec"
+  ],
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native"
+  ],
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    }
+  },
+  "prettier": "@ionic/prettier-config",
+  "swiftlint": "@ionic/swiftlint-config",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rediska1114/capacitor-appmetrica"
+  },
+  "bugs": {
+    "url": "https://github.com/rediska1114/capacitor-appmetrica/issues"
+  }
+}
