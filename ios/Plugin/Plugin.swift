@@ -11,7 +11,7 @@ public class Appmetrica: CAPPlugin {
     override public func load() {
         // Initializing the AppMetrica SDK.
         let apiKey = getConfigValue("apiKey") as! String
-        let logs = getConfigValue("logs") as! Bool ?? false
+        let logs = getConfigValue("logs") as! Bool
         let configuration = YMMYandexMetricaConfiguration(apiKey: apiKey)
         configuration?.logs = logs
 
