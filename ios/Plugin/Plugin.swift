@@ -31,6 +31,17 @@ public class Appmetrica: CAPPlugin {
     }
 
     @objc
+    func setUserProfileID(_ call: CAPPluginCall) {
+        guard let id = call.getString("id") else {
+            return call.reject("Missing id argument")
+        }
+
+        YMMYandexMetrica.setUserProfileID(id)
+
+        call.success()
+    }
+
+    @objc
     func handleOpenUrl(_ notification: Notification) {
         guard let object = notification.object as? [String: Any] else {
             print("There is no object on handleOpenUrl")

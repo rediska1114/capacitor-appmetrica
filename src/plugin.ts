@@ -9,4 +9,8 @@ export class Appmetrica {
   logEvent(name: string, parameters?: Object) {
     return this.appmetrica.logEvent({ name, parameters });
   }
+
+  setUserProfileID(id: string) {
+    return this.appmetrica.setUserProfileID({ id });
+  }
 }
