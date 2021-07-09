@@ -11,7 +11,10 @@ public class Appmetrica: CAPPlugin {
     override public func load() {
         // Initializing the AppMetrica SDK.
         let apiKey = getConfigValue("apiKey") as! String
+        let logs = getConfigValue("logs") as! Bool ?? false
         let configuration = YMMYandexMetricaConfiguration(apiKey: apiKey)
+        configuration?.logs = logs
+
         YMMYandexMetrica.activate(with: configuration!)
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleOpenUrl(_:)), name: Notification.Name(CAPNotifications.URLOpen.name()), object: nil)
