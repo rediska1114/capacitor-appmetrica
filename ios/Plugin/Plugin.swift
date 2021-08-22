@@ -61,13 +61,13 @@ public class Appmetrica: CAPPlugin {
 
     @objc
     func getDeviceID(_ call: CAPPluginCall) {
-        YMMYandexMetrica.requestAppMetricaDeviceID(withCompletionQueue: nil) { deviceId, error in
+        YMMYandexMetrica.requestAppMetricaDeviceID(withCompletionQueue: nil) { deviceID, error in
             if let error = error {
                 return call.reject(error.localizedDescription)
             }
 
             return call.resolve([
-                "deviceId": deviceId!
+                "deviceID": deviceID!
             ])
         }
     }
