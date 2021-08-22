@@ -13,4 +13,8 @@ export class Appmetrica {
   setUserProfileID(id: string) {
     return this.appmetrica.setUserProfileID({ id });
   }
+
+  getDeviceID() {
+    return this.appmetrica.getDeviceID().then(({ deviceID }) => deviceID);
+  }
 }

@@ -6,4 +6,5 @@
 CAP_PLUGIN(Appmetrica, "Appmetrica",
            CAP_PLUGIN_METHOD(reportEvent, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setUserProfileID, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(getDeviceID, CAPPluginReturnPromise);
 )

@@ -7,4 +7,5 @@ declare module '@capacitor/core' {
 export interface AppmetricaPlugin {
   reportEvent(options: { name: string; parameters?: Object }): Promise<void>;
   setUserProfileID(options: { id: string }): Promise<void>;
+  getDeviceID(): Promise<{ deviceID: string }>;
 }

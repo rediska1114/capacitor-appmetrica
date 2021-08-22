@@ -58,4 +58,17 @@ public class Appmetrica: CAPPlugin {
         }
         YMMYandexMetrica.handleOpen(url)
     }
+
+    @objc
+    func getDeviceID(_ call: CAPPluginCall) {
+        YMMYandexMetrica.requestAppMetricaDeviceID(withCompletionQueue: nil) { deviceId, error in
+            if let error = error {
+                return call.reject(error.localizedDescription)
+            }
+
+            return call.resolve([
+                "deviceId": deviceId!
+            ])
+        }
+    }
 }
