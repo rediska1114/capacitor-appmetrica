@@ -4,9 +4,13 @@ Currently only works on ios, but android support will be coming soon
 
 # Available methods:
 
-// TODO
+- logEvent
+- setUserProfileID
+- reportUserProfile
+- getDeviceID
 
 # Usage example:
+
 0. Add in `capacitor.config.json`
 
 ```json
@@ -39,7 +43,7 @@ export class AppModule {}
 
 ```ts
 ...
-import { Appmetrica } from 'capacitor-appmetrica'
+import { Appmetrica, UserProfile, ProfileAttribute } from 'capacitor-appmetrica'
 
 @Injectable()
 export class AnalyticsService {
@@ -47,6 +51,25 @@ export class AnalyticsService {
 
 	async logEvent(name: string, params?: Object) {
 		await this.appmetrica.logEvent(name, params)
+	}
+
+	async setUserProfileID(id: string) {
+		return this.appmetrica.setUserProfileID(id)
+	}
+
+	async reportUserProfile() {
+		const userProfile = new UserProfile()
+		userProfile.applyFromArray([
+			ProfileAttribute.Name().withValue('Ivan'),
+			ProfileAttribute.BirthDate().withBirthDate(new Date()),
+			ProfileAttribute.CustomString('born_in').withValueIfUndefined('Moscow'),
+		])
+
+		await this.appmetrica.reportUserProfile(userProfile)
+	}
+
+	async getDeviceID(): string {
+		return this.appmetrica.getDeviceID()
 	}
 }
 
