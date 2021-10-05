@@ -94,86 +94,86 @@ public class Appmetrica: CAPPlugin {
             } else if attributeName == "notificationsEnabled" {
                 profile.apply(userProfileNotificationsEnabledFromDictionary(methodName, values))
             } else if attributeName == "customBoolean" {
-                profile.apply(userProfileBoolDictionary(methodName, key, values))
+                profile.apply(userProfileBoolDictionary(methodName, key!, values))
             } else if attributeName == "customCounter" {
-                profile.apply(userProfileCounterFromDictionary(methodName, key, values))
+                profile.apply(userProfileCounterFromDictionary(methodName, key!, values))
             } else if attributeName == "customNumber" {
-                profile.apply(userProfileNumberFromDictionary(methodName, key, values))
+                profile.apply(userProfileNumberFromDictionary(methodName, key!, values))
             } else if attributeName == "customString" {
-                profile.apply(userProfileStringFromDictionary(methodName, key, values))
+                profile.apply(userProfileStringFromDictionary(methodName, key!, values))
             } else {
                 call.reject("Unknown attribute " + attributeName)
             }
         }
 
-        YMMYandexMetrica.reportUserProfile(profile, onFailure: { error in
+        YMMYandexMetrica.report(profile, onFailure: { error in
             call.reject(error.localizedDescription)
         })
 
         return call.resolve()
     }
-
+    @objc
     func userProfileBirthDateFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withAge" {
-            userProfileUpdate = YMMProfileAttribute.birthDate().withBirthDate(values[0] as! Int)
+            userProfileUpdate = YMMProfileAttribute.birthDate().withAge(values[0] as! UInt)
         } else if methodName == "withBirthDate" {
-            let date: DateComponents
+            var date = DateComponents()
             if values.count >= 1 {
-                date.year = values[0] as! Int
+                date.year = values[0] as? Int
             }
             if values.count >= 2 {
-                date.month = values[1] as! Int
+                date.month = values[1] as? Int
             }
             if values.count >= 3 {
-                date.day = values[2] as! Int
+                date.day = values[2] as? Int
             }
-            userProfileUpdate = YMMProfileAttribute.birthDate().withDateComponents(values[0] as! Int)
+            userProfileUpdate = YMMProfileAttribute.birthDate().withDate(dateComponents: date)
         } else if methodName == "withValueReset" {
             userProfileUpdate = YMMProfileAttribute.birthDate().withValueReset()
         } else {
             print("Unknown method" + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileGenderTypeFromString(_ genderType: String) -> YMMGenderType {
         if genderType == "MALE" {
-            return YMMGenderTypeMale
+            return YMMGenderType.male
         } else if genderType == "FEMALE" {
-            return YMMGenderTypeFemale
+            return YMMGenderType.female
         }
-        return YMMGenderTypeOther
+        return YMMGenderType.other
     }
-
-    func serProfileGenderFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate
+    @objc
+    func userProfileGenderFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withValue" {
-            let genderType: YMMGenderType = userProfileGenderTypeFromString(values[0])
+            let genderType: YMMGenderType = userProfileGenderTypeFromString(values[0] as! String)
             userProfileUpdate = YMMProfileAttribute.gender().withValue(genderType)
         } else if methodName == "withValueReset" {
-            userProfileUpdate = YMMProfileAttribute.gender().withValueReset
+            userProfileUpdate = YMMProfileAttribute.gender().withValueReset()
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileNameFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withValue" {
-            userProfileUpdate = YMMProfileAttribute.name().withValue(values[0])
+            userProfileUpdate = YMMProfileAttribute.name().withValue(values[0] as? String)
         } else if methodName == "withValueReset" {
             userProfileUpdate = YMMProfileAttribute.name().withValueReset()
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileNotificationsEnabledFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.notificationsEnabled().withValue(values[0] as! Bool)
         } else if methodName == "withValueReset" {
@@ -181,12 +181,12 @@ public class Appmetrica: CAPPlugin {
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileBoolDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.customBool(key).withValue(values[0] as! Bool)
         } else if methodName == "withValueIfUndefined" {
@@ -196,23 +196,23 @@ public class Appmetrica: CAPPlugin {
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileCounterFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withDelta" {
             userProfileUpdate = YMMProfileAttribute.customCounter(key).withDelta(values[0] as! Double)
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileNumberFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.customNumber(key).withValue(values[0] as! Double)
         } else if methodName == "withValueIfUndefined" {
@@ -222,21 +222,21 @@ public class Appmetrica: CAPPlugin {
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
-
+    @objc
     func userProfileStringFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        let userProfileUpdate: YMMUserProfileUpdate = nil
+        var userProfileUpdate: YMMUserProfileUpdate? = nil
         if methodName == "withValue" {
-            userProfileUpdate = YMMProfileAttribute.customString(key).withValue(values[0])
+            userProfileUpdate = YMMProfileAttribute.customString(key).withValue(values[0] as? String)
         } else if methodName == "withValueIfUndefined" {
-            userProfileUpdate = YMMProfileAttribute.customString(key).withValueIfUndefined(values[0])
+            userProfileUpdate = YMMProfileAttribute.customString(key).withValueIfUndefined(values[0] as? String)
         } else if methodName == "withValueReset" {
             userProfileUpdate = YMMProfileAttribute.customString(key).withValueReset()
         } else {
             print("Unknown method " + methodName)
         }
-        return userProfileUpdate
+        return userProfileUpdate!
     }
 }
