@@ -52,6 +52,7 @@ public class Appmetrica: CAPPlugin {
             print("There is no object on handleOpenUrl")
             return
         }
+
         guard let url = object["url"] as? URL else {
             print("There is no url on handleOpenUrl")
             return
@@ -112,9 +113,10 @@ public class Appmetrica: CAPPlugin {
 
         return call.resolve()
     }
+
     @objc
     func userProfileBirthDateFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withAge" {
             userProfileUpdate = YMMProfileAttribute.birthDate().withAge(values[0] as! UInt)
         } else if methodName == "withBirthDate" {
@@ -136,6 +138,7 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileGenderTypeFromString(_ genderType: String) -> YMMGenderType {
         if genderType == "MALE" {
@@ -145,10 +148,11 @@ public class Appmetrica: CAPPlugin {
         }
         return YMMGenderType.other
     }
+
     @objc
     func userProfileGenderFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             let genderType: YMMGenderType = userProfileGenderTypeFromString(values[0] as! String)
             userProfileUpdate = YMMProfileAttribute.gender().withValue(genderType)
@@ -159,9 +163,10 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileNameFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.name().withValue(values[0] as? String)
         } else if methodName == "withValueReset" {
@@ -171,9 +176,10 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileNotificationsEnabledFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.notificationsEnabled().withValue(values[0] as! Bool)
         } else if methodName == "withValueReset" {
@@ -183,10 +189,11 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileBoolDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.customBool(key).withValue(values[0] as! Bool)
         } else if methodName == "withValueIfUndefined" {
@@ -198,10 +205,11 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileCounterFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withDelta" {
             userProfileUpdate = YMMProfileAttribute.customCounter(key).withDelta(values[0] as! Double)
         } else {
@@ -209,10 +217,11 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileNumberFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.customNumber(key).withValue(values[0] as! Double)
         } else if methodName == "withValueIfUndefined" {
@@ -224,10 +233,11 @@ public class Appmetrica: CAPPlugin {
         }
         return userProfileUpdate!
     }
+
     @objc
     func userProfileStringFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
-        var userProfileUpdate: YMMUserProfileUpdate? = nil
+        var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.customString(key).withValue(values[0] as? String)
         } else if methodName == "withValueIfUndefined" {
