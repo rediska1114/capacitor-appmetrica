@@ -1,6 +1,8 @@
 import Capacitor
 import Foundation
+import UserNotifications
 import YandexMobileMetrica
+import YandexMobileMetricaPush
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -12,14 +14,19 @@ public class Appmetrica: CAPPlugin {
         // Initializing the AppMetrica SDK.
         let apiKey = getConfigValue("apiKey") as! String
         let logs = getConfigValue("logs") as? Bool
+        let withPush = getConfigValue("withPush") as? Bool ?? false
         let configuration = YMMYandexMetricaConfiguration(apiKey: apiKey)
-        if let logs = logs {
-            configuration?.logs = logs
-        }
+        configuration?.logs = logs ?? false
 
         YMMYandexMetrica.activate(with: configuration!)
-
         NotificationCenter.default.addObserver(self, selector: #selector(handleOpenUrl(_:)), name: Notification.Name(CAPNotifications.URLOpen.name()), object: nil)
+
+        if withPush {
+            let delegate = YMPYandexMetricaPush.userNotificationCenterDelegate()
+            delegate.nextDelegate = UNUserNotificationCenter.current().delegate
+            UNUserNotificationCenter.current().delegate = delegate
+            NotificationCenter.default.addObserver(self, selector: #selector(didRegisterForRemoteNotificationsWithDeviceToken(_:)), name: Notification.Name(CAPNotifications.DidRegisterForRemoteNotificationsWithDeviceToken.name()), object: nil)
+        }
     }
 
     @objc func reportEvent(_ call: CAPPluginCall) {
@@ -248,5 +255,14 @@ public class Appmetrica: CAPPlugin {
             print("Unknown method " + methodName)
         }
         return userProfileUpdate!
+    }
+
+    @objc public func didRegisterForRemoteNotificationsWithDeviceToken(_ notification: Notification) {
+        guard let deviceToken = notification.object as? Data else {
+            print("deviceToken ERROR")
+            return
+        }
+
+        YMPYandexMetricaPush.setDeviceTokenFrom(deviceToken)
     }
 }

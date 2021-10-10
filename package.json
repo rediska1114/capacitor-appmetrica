@@ -1,6 +1,6 @@
 {
   "name": "capacitor-appmetrica",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Capacitor plugin for Appmetrica",
   "main": "plugin.js",
   "module": "esm/index.js",
@@ -9,7 +9,7 @@
     "lint": "npm run prettier -- --check && npm run swiftlint -- lint",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
-    "build": "npm run clean && tsc && rollup -c rollup.config.js",
+    "build": "tsc && rollup -c rollup.config.js",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
