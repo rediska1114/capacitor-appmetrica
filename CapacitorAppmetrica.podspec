@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   s.library = "z"
   s.library = "c++"
   s.swift_version = "5.1"
+  s.static_framework = true
   s.xcconfig = {
     "OTHER_LDFLAGS" => "-lc++ -lz",
   }
