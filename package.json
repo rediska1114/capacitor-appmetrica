@@ -1,6 +1,6 @@
 {
   "name": "capacitor-appmetrica",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "Capacitor plugin for Appmetrica",
   "main": "plugin.js",
   "module": "esm/index.js",
