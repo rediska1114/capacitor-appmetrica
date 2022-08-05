@@ -13,8 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}"
   s.ios.deployment_target = "11.0"
   s.dependency "Capacitor"
-  s.dependency "YandexMobileMetricaPush", "1.0.0"
-  s.dependency "YandexMobileMetrica", '3.17.0'
+  s.dependency "YandexMobileMetrica", "4.2.0"
   s.library = "sqlite3"
   s.library = "z"
   s.library = "c++"

@@ -5,8 +5,7 @@ def capacitor_pods
   use_frameworks!
   pod "Capacitor", :path => "../node_modules/@capacitor/ios"
   pod "CapacitorCordova", :path => "../node_modules/@capacitor/ios"
-  pod "YandexMobileMetricaPush/Dynamic", "1.0.0"
-  pod "YandexMobileMetrica/Dynamic", "3.17.0"
+  pod "YandexMobileMetrica/Dynamic", "4.2.0"
 end
 
 target "Plugin" do

@@ -1,8 +1,8 @@
 import Capacitor
+import CoreLocation
 import Foundation
 import UserNotifications
 import YandexMobileMetrica
-import YandexMobileMetricaPush
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -10,23 +10,130 @@ import YandexMobileMetricaPush
  */
 @objc(Appmetrica)
 public class Appmetrica: CAPPlugin {
-    override public func load() {
+    @objc func activate(_ call: CAPPluginCall) {
+        guard let apiKey = call.getString("apiKey") else {
+            return call.reject("Missing apiKey argument")
+        }
+
         // Initializing the AppMetrica SDK.
-        let apiKey = getConfigValue("apiKey") as! String
-        let logs = getConfigValue("logs") as? Bool
-        let withPush = getConfigValue("withPush") as? Bool ?? false
+
         let configuration = YMMYandexMetricaConfiguration(apiKey: apiKey)
-        configuration?.logs = logs ?? false
+
+        if let appVersion = call.getString("appVersion") {
+            configuration?.appVersion = appVersion
+        }
+        if let crashReporting = call.getBool("crashReporting") {
+            configuration?.crashReporting = crashReporting
+        }
+        if let activationAsSessionStart = call.getBool("activationAsSessionStart") {
+            configuration?.handleActivationAsSessionStart = activationAsSessionStart
+        }
+        if let firstActivationAsUpdate = call.getBool("firstActivationAsUpdate") {
+            configuration?.handleFirstActivationAsUpdate = firstActivationAsUpdate
+        }
+        if let location = call.getObject("location") {
+            configuration?.location = locationForDictionary(location as! [String: Double]?)
+        }
+        if let locationTracking = call.getBool("locationTracking") {
+            configuration?.locationTracking = locationTracking
+        }
+        if let userProfileID = call.getString("userProfileID") {
+            configuration?.userProfileID = userProfileID
+        }
+        if let appOpenTrackingEnabled = call.getBool("appOpenTrackingEnabled") {
+            configuration?.appOpenTrackingEnabled = appOpenTrackingEnabled
+        }
+        if let revenueAutoTrackingEnabled = call.getBool("revenueAutoTrackingEnabled") {
+            configuration?.revenueAutoTrackingEnabled = revenueAutoTrackingEnabled
+        }
+        if let logs = call.getBool("logs") {
+            configuration?.logs = logs
+        }
+        if let preloadInfo = call.getObject("preloadInfo") {
+            configuration?.preloadInfo = preloadInfoForDictionary(preloadInfo)
+        }
+        if let sessionsAutoTracking = call.getBool("sessionsAutoTracking") {
+            configuration?.sessionsAutoTracking = sessionsAutoTracking
+        }
+        if let sessionTimeout = call.getInt("sessionTimeout") {
+            configuration?.sessionTimeout = UInt(sessionTimeout)
+        }
+        if let statisticsSending = call.getBool("statisticsSending") {
+            configuration?.statisticsSending = statisticsSending
+        }
 
         YMMYandexMetrica.activate(with: configuration!)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleOpenUrl(_:)), name: Notification.Name(CAPNotifications.URLOpen.name()), object: nil)
 
-        if withPush {
-            let delegate = YMPYandexMetricaPush.userNotificationCenterDelegate()
-            delegate.nextDelegate = UNUserNotificationCenter.current().delegate
-            UNUserNotificationCenter.current().delegate = delegate
-            NotificationCenter.default.addObserver(self, selector: #selector(didRegisterForRemoteNotificationsWithDeviceToken(_:)), name: Notification.Name(CAPNotifications.DidRegisterForRemoteNotificationsWithDeviceToken.name()), object: nil)
+        call.resolve()
+    }
+
+    @objc func pauseSession(_ call: CAPPluginCall) {
+        YMMYandexMetrica.pauseSession()
+        call.resolve()
+    }
+
+    @objc func sendEventsBuffer(_ call: CAPPluginCall) {
+        YMMYandexMetrica.sendEventsBuffer()
+        call.resolve()
+    }
+
+    @objc func resumeSession(_ call: CAPPluginCall) {
+        YMMYandexMetrica.resumeSession()
+        call.resolve()
+    }
+
+    @objc func setLocationTracking(_ call: CAPPluginCall) {
+        guard let enabled = call.getBool("enabled") else {
+            return call.reject("Missing enabled argument")
         }
+        YMMYandexMetrica.setLocationTracking(enabled)
+        call.resolve()
+    }
+
+    @objc func setStatisticsSending(_ call: CAPPluginCall) {
+        guard let enabled = call.getBool("enabled") else {
+            return call.reject("Missing enabled argument")
+        }
+        YMMYandexMetrica.setStatisticsSending(enabled)
+        call.resolve()
+    }
+
+    @objc func setLocation(_ call: CAPPluginCall) {
+        guard let location = call.getObject("location") else {
+            return call.reject("Missing location argument")
+        }
+        YMMYandexMetrica.setLocation(locationForDictionary(location as! [String: Double]?))
+        call.resolve()
+    }
+
+    @objc func reportAppOpen(_ call: CAPPluginCall) {
+        guard let urlString = call.getString("url") else {
+            return call.reject("Missing url argument")
+        }
+        guard let url = URL(string: urlString) else {
+            return call.reject("Bad url argument")
+        }
+        YMMYandexMetrica.handleOpen(url)
+        call.resolve()
+    }
+
+    @objc func reportError(_ call: CAPPluginCall) {
+        guard let identifier = call.getString("identifier") else {
+            return call.reject("Missing identifier argument")
+        }
+        let parameters = call.getObject("parameters")
+        let message = call.getString("message")
+
+        let error = YMMError(
+            identifier: identifier,
+            message: message,
+            parameters: parameters
+        )
+
+        YMMYandexMetrica.report(error: error, onFailure: { err in
+            call.reject(err.localizedDescription)
+        })
+        call.resolve()
     }
 
     @objc func reportEvent(_ call: CAPPluginCall) {
@@ -42,6 +149,19 @@ public class Appmetrica: CAPPlugin {
         call.success()
     }
 
+    @objc func reportReferralUrl(_ call: CAPPluginCall) {
+        guard let referralUrl = call.getString("referralUrl") else {
+            return call.reject("Missing referralUrl argument")
+        }
+
+        guard let url = URL(string: referralUrl) else {
+            return call.reject("Bad referralUrl argument")
+        }
+
+        YMMYandexMetrica.reportReferralUrl(url)
+        call.success()
+    }
+
     @objc
     func setUserProfileID(_ call: CAPPluginCall) {
         guard let id = call.getString("id") else {
@@ -51,20 +171,6 @@ public class Appmetrica: CAPPlugin {
         YMMYandexMetrica.setUserProfileID(id)
 
         call.success()
-    }
-
-    @objc
-    func handleOpenUrl(_ notification: Notification) {
-        guard let object = notification.object as? [String: Any] else {
-            print("There is no object on handleOpenUrl")
-            return
-        }
-
-        guard let url = object["url"] as? URL else {
-            print("There is no url on handleOpenUrl")
-            return
-        }
-        YMMYandexMetrica.handleOpen(url)
     }
 
     @objc
@@ -122,7 +228,7 @@ public class Appmetrica: CAPPlugin {
     }
 
     @objc
-    func userProfileBirthDateFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
+    private  func userProfileBirthDateFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withAge" {
             userProfileUpdate = YMMProfileAttribute.birthDate().withAge(values[0] as! UInt)
@@ -146,8 +252,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileGenderTypeFromString(_ genderType: String) -> YMMGenderType {
+    @objc private func userProfileGenderTypeFromString(_ genderType: String) -> YMMGenderType {
         if genderType == "MALE" {
             return YMMGenderType.male
         } else if genderType == "FEMALE" {
@@ -156,8 +261,7 @@ public class Appmetrica: CAPPlugin {
         return YMMGenderType.other
     }
 
-    @objc
-    func userProfileGenderFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate
+    @objc private func userProfileGenderFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
@@ -171,8 +275,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileNameFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
+    @objc private func userProfileNameFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.name().withValue(values[0] as? String)
@@ -184,8 +287,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileNotificationsEnabledFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
+    @objc private func userProfileNotificationsEnabledFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
             userProfileUpdate = YMMProfileAttribute.notificationsEnabled().withValue(values[0] as! Bool)
@@ -197,8 +299,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileBoolDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
+    @objc private func userProfileBoolDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
@@ -213,8 +314,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileCounterFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
+    @objc private func userProfileCounterFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withDelta" {
@@ -225,8 +325,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileNumberFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
+    @objc private func userProfileNumberFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
@@ -241,8 +340,7 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc
-    func userProfileStringFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
+    @objc private func userProfileStringFromDictionary(_ methodName: String, _ key: String, _ values: [Any]) -> YMMUserProfileUpdate
     {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withValue" {
@@ -257,12 +355,43 @@ public class Appmetrica: CAPPlugin {
         return userProfileUpdate!
     }
 
-    @objc public func didRegisterForRemoteNotificationsWithDeviceToken(_ notification: Notification) {
-        guard let deviceToken = notification.object as? Data else {
-            print("deviceToken ERROR")
-            return
+    @objc private func locationForDictionary(_ locationDict: [String: Double]?) -> CLLocation? {
+        if locationDict == nil {
+            return nil
         }
 
-        YMPYandexMetricaPush.setDeviceTokenFrom(deviceToken)
+        let latitude = Double(locationDict!["latitude"]!)
+        let longitude = Double(locationDict!["longitude"]!)
+        let altitude = Double(locationDict!["altitude"]!)
+        let horizontalAccuracy = Double(locationDict!["accuracy"]!)
+        let verticalAccuracy = Double(locationDict!["verticalAccuracy"]!)
+        let course = Double(locationDict!["course"]!)
+        let speed = Double(locationDict!["speed"]!)
+        let timestamp = locationDict!["timestamp"]
+
+        let locationDate = timestamp != nil ? Date(timeIntervalSince1970: Double(timestamp!)) : Date()
+        let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
+        let location = CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: locationDate)
+
+        return location
+    }
+
+    @objc private func preloadInfoForDictionary(_ preloadInfoDict: [String: Any]?) -> YMMYandexMetricaPreloadInfo?
+    {
+        if preloadInfoDict == nil {
+            return nil
+        }
+
+        let trackingId = preloadInfoDict!["trackingId"]
+        let preloadInfo = YMMYandexMetricaPreloadInfo(trackingIdentifier: trackingId as! String)
+
+        let additionalInfo = preloadInfoDict!["additionalInfo"] as? [String: Any]
+        if additionalInfo != nil {
+            for (key, value) in additionalInfo! {
+                preloadInfo?.setAdditional(value as! String, forKey: key)
+            }
+        }
+
+        return preloadInfo
     }
 }

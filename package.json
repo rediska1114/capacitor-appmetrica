@@ -1,6 +1,6 @@
 {
   "name": "capacitor-appmetrica",
-  "version": "0.3.1",
+  "version": "1.0.0-beta.0",
   "description": "Capacitor plugin for Appmetrica",
   "main": "plugin.js",
   "module": "esm/index.js",
@@ -52,6 +52,9 @@
   "capacitor": {
     "ios": {
       "src": "ios"
+    },
+    "android": {
+      "src": "android"
     }
   },
   "prettier": "@ionic/prettier-config",

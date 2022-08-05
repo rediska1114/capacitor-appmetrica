@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+    branches:
+      - beta/**
 
 jobs:
   publish:
@@ -14,3 +17,4 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: dist/package.json
+          tag: beta
