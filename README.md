@@ -1,26 +1,23 @@
 # Capacitor Appmetrica plugin
 
-Currently only works on ios, but android support will be coming soon
-
 # Available methods:
 
-- logEvent
-- setUserProfileID
-- reportUserProfile
-- getDeviceID
+- activate()
+- pauseSession()
+- sendEventsBuffer()
+- resumeSession()
+- setLocationTracking()
+- setStatisticsSending()
+- setLocation()
+- reportAppOpen()
+- reportError()
+- reportEvent()
+- reportReferralUrl()
+- setUserProfileID()
+- getDeviceID()
+- reportUserProfile()
 
 # Usage example:
-
-0. Add in `capacitor.config.json`
-
-```json
-{
-	"plugins": {
-		"Appmetrica": {
-			"apiKey": "Your API key"
-		}
-	}
-```
 
 1. In your module (e.g. `app.module.ts`)
 
@@ -49,6 +46,10 @@ import { Appmetrica, UserProfile, ProfileAttribute } from 'capacitor-appmetrica'
 export class AnalyticsService {
 	constructor(private appmetrica: Appmetrica) {}
 
+	async initialization() {
+		await this.appmetrica.activate("<SDK_API_KEY>", { logs: true })
+	}
+
 	async logEvent(name: string, params?: Object) {
 		await this.appmetrica.logEvent(name, params)
 	}
@@ -74,3 +75,31 @@ export class AnalyticsService {
 }
 
 ```
+
+## BREAKING CHANGES in 1.x.x
+
+1. Removed automatic initialization of Appmetrica, now you need to initialize it manually using the `activate` method
+
+To migrate, remove the `Appmetrica` settings from the `capacitor.config.json`
+
+```diff
+{
+	"plugins": {
+		...
+-		"Appmetrica": {
+-			"apiKey": "Your API key"
+-			...
+-		},
+		...
+	}
+```
+
+and run the `activate` method when the application starts. For example:
+
+```typescript
+ngOnInit() {
+	this.appmetrica.activate("<API_KEY>", options)
+}
+```
+
+2. Added Android support
