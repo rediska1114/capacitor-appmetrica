@@ -103,3 +103,5 @@ ngOnInit() {
 ```
 
 2. Added Android support
+
+3. Removed support for appmetrica push notifications
