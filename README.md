@@ -17,7 +17,7 @@
 - getDeviceID()
 - reportUserProfile()
 
-# Usage example:
+# Angular usage example:
 
 1. In your module (e.g. `app.module.ts`)
 
@@ -74,6 +74,63 @@ export class AnalyticsService {
 	}
 }
 
+```
+
+# React usage example:
+
+```tsx
+import { Appmetrica } from 'capacitor-appmetrica';
+
+export function useAppmetrica() {
+  return useRef(new Appmetrica());
+}
+```
+
+```tsx
+import {
+  Appmetrica,
+  UserProfile,
+  ProfileAttribute,
+} from 'capacitor-appmetrica';
+
+export default function App() {
+  const appmetrica = useAppmetrica();
+
+  const [deviceId, setDeviceId] = useState(null);
+
+  useEffect(() => {
+    appmetrica.activate('<SDK_API_KEY>', { logs: true });
+
+    appmetrica.getDeviceID().then(deviceId => {
+      setDeviceId(deviceId);
+    });
+  }, []);
+
+  const onButtonClick = () => {
+    appmetrica.logEvent('clickButton', { param: 10 });
+  };
+
+  const onProfileClick = async () => {
+    await appmetrica.setUserProfileID('123');
+
+    const userProfile = new UserProfile();
+    userProfile.applyFromArray([
+      ProfileAttribute.Name().withValue('Ivan'),
+      ProfileAttribute.BirthDate().withBirthDate(new Date()),
+      ProfileAttribute.CustomString('born_in').withValueIfUndefined('Moscow'),
+    ]);
+
+    await appmetrica.reportUserProfile(userProfile);
+  };
+
+  return (
+    <div>
+      deviceId: {deviceId}
+      <button onClick={onButtonClick}>log event</button>
+      <button onClick={onProfileClick()}>set profile</button>
+    </div>
+  );
+}
 ```
 
 ## BREAKING CHANGES in 1.x.x
