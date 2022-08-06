@@ -12,6 +12,7 @@ const CapacitorAppmetrica = registerPlugin<AppmetricaPlugin>('Appmetrica', {
 });
 
 export * from './definitions';
+export * from './profile'
 
 export class Appmetrica {
   private appmetrica = CapacitorAppmetrica;
