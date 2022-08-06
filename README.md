@@ -127,7 +127,7 @@ export default function App() {
     <div>
       deviceId: {deviceId}
       <button onClick={onButtonClick}>log event</button>
-      <button onClick={onProfileClick()}>set profile</button>
+      <button onClick={onProfileClick}>set profile</button>
     </div>
   );
 }
