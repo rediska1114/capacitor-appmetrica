@@ -1,18 +1,18 @@
 PODS:
-  - Capacitor (2.4.7):
+  - Capacitor (3.7.0):
     - CapacitorCordova
-  - CapacitorCordova (2.4.7)
-  - YandexMobileMetrica/Dynamic (3.17.0):
-    - YandexMobileMetrica/Dynamic/Core (= 3.17.0)
-    - YandexMobileMetrica/Dynamic/Crashes (= 3.17.0)
-  - YandexMobileMetrica/Dynamic/Core (3.17.0)
-  - YandexMobileMetrica/Dynamic/Crashes (3.17.0):
+  - CapacitorCordova (3.7.0)
+  - YandexMobileMetrica/Dynamic (4.2.0):
+    - YandexMobileMetrica/Dynamic/Core (= 4.2.0)
+    - YandexMobileMetrica/Dynamic/Crashes (= 4.2.0)
+  - YandexMobileMetrica/Dynamic/Core (4.2.0)
+  - YandexMobileMetrica/Dynamic/Crashes (4.2.0):
     - YandexMobileMetrica/Dynamic/Core
 
 DEPENDENCIES:
   - "Capacitor (from `../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../node_modules/@capacitor/ios`)"
-  - YandexMobileMetrica/Dynamic (= 3.17.0)
+  - YandexMobileMetrica/Dynamic (= 4.2.0)
 
 SPEC REPOS:
   trunk:
@@ -25,10 +25,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@capacitor/ios"
 
 SPEC CHECKSUMS:
-  Capacitor: 4cd7b342d5a15b1f6f333d687358953afd7b2d8b
-  CapacitorCordova: 2c9d6e28d9d86c4da087fa2c3537c1841954bb12
-  YandexMobileMetrica: 9e713c16bb6aca0ba63b84c8d7b8b86d32f4ecc4
+  Capacitor: a7dc804520a7b3bba6a566c472329365622b663e
+  CapacitorCordova: 6ea8e936eac6cd3c50f2cfc1b7423ac71d9909e4
+  YandexMobileMetrica: f5f9c605eaaba33ff6ab2b6bc3259035ca60ed87
 
-PODFILE CHECKSUM: 3dc82fc70e2b99dd2a617fef037a190ad59cdc0a
+PODFILE CHECKSUM: cd0cd08e8339f76c45dddf4d35ea9530e8a1f85b
 
 COCOAPODS: 1.10.1
