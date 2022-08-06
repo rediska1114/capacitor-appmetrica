@@ -1,4 +1,4 @@
-# Capacitor Appmetrica plugin
+# Capacitor Appmetrica plugin [![npm version](https://badge.fury.io/js/capacitor-appmetrica.svg)](https://badge.fury.io/js/capacitor-appmetrica)
 
 # Available methods:
 
