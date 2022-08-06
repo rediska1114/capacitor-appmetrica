@@ -105,3 +105,5 @@ ngOnInit() {
 2. Added Android support
 
 3. Removed support for appmetrica push notifications
+
+4. Added full support for Capacitor 3 and removed compatibility with Capacitor 2

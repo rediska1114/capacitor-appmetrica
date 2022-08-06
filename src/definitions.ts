@@ -1,11 +1,5 @@
 import type { UserProfileUpdate } from './profile';
 
-declare module '@capacitor/core' {
-  interface PluginRegistry {
-    Appmetrica: AppmetricaPlugin;
-  }
-}
-
 export interface AppmetricaPlugin {
   activate(
     options: AppmetricaActivateOptions & { apiKey: string },

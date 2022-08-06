@@ -1,2 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.rediska1114.plugins.capacitorappmetrica.capacitorappmetrica">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.rediska1114.plugins.appmetrica">
 </manifest>

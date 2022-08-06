@@ -1,15 +1,15 @@
 import Capacitor
 import CoreLocation
 import Foundation
-import UserNotifications
 import YandexMobileMetrica
+
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(Appmetrica)
-public class Appmetrica: CAPPlugin {
+@objc(AppmetricaPlugin)
+public class AppmetricaPlugin: CAPPlugin {
     @objc func activate(_ call: CAPPluginCall) {
         guard let apiKey = call.getString("apiKey") else {
             return call.reject("Missing apiKey argument")
@@ -228,7 +228,7 @@ public class Appmetrica: CAPPlugin {
     }
 
     @objc
-    private  func userProfileBirthDateFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
+    private func userProfileBirthDateFromDictionary(_ methodName: String, _ values: [Any]) -> YMMUserProfileUpdate {
         var userProfileUpdate: YMMUserProfileUpdate?
         if methodName == "withAge" {
             userProfileUpdate = YMMProfileAttribute.birthDate().withAge(values[0] as! UInt)

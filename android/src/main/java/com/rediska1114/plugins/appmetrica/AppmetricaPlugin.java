@@ -1,4 +1,4 @@
-package com.rediska1114.plugins.capacitorappmetrica;
+package com.rediska1114.plugins.appmetrica;
 
 import static android.content.ContentValues.TAG;
 
@@ -11,10 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
-import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.CapacitorPlugin;
 import com.yandex.metrica.AppMetricaDeviceIDListener;
 import com.yandex.metrica.PreloadInfo;
 import com.yandex.metrica.YandexMetrica;
@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONException;
 
-@NativePlugin
-public class Appmetrica extends Plugin {
+@CapacitorPlugin(name = "Appmetrica")
+public class AppmetricaPlugin extends Plugin {
 
     @PluginMethod
     public void activate(PluginCall call) {

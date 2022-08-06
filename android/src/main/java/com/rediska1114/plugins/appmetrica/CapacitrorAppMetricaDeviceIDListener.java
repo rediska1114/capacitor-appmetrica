@@ -1,4 +1,4 @@
-package com.rediska1114.plugins.capacitorappmetrica;
+package com.rediska1114.plugins.appmetrica;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

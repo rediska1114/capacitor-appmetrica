@@ -3,8 +3,8 @@
 
 // Define the plugin using the CAP_PLUGIN Macro, and
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
-CAP_PLUGIN(Appmetrica, "Appmetrica",
-           CAP_PLUGIN_METHOD(activate, CAPPluginReturnPromise);
+CAP_PLUGIN(AppmetricaPlugin, "Appmetrica",
+          CAP_PLUGIN_METHOD(activate, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(pauseSession, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(sendEventsBuffer, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(resumeSession, CAPPluginReturnPromise);
